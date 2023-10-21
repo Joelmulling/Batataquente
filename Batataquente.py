@@ -17,7 +17,7 @@ def hotPotato(namelist, num):
     largura = 1024
     altura = 768
     screen = pygame.display.set_mode((largura, altura))
-    pygame.display.set_caption("Jogo de Batata Quente")
+    pygame.display.set_caption("Batata Quente")
 
     branco = (255, 255, 255)
     font = pygame.font.Font(None, 25)
