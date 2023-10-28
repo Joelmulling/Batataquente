@@ -124,6 +124,12 @@ def calculate_player_positions(num_players, radius, center):
         player_positions.append((x, y))
     return player_positions
 
+def enqueue(fila, item):
+    fila.append(item)
+
+def dequeue(fila):
+    return fila.pop(0)
+
 def hotPotato(num_players, num):
     pygame.init()
     screen = pygame.display.set_mode((LARGURA, ALTURA))
@@ -148,19 +154,15 @@ def hotPotato(num_players, num):
 
     simqueue = namelist.copy()
 
-    while len(eliminados) < len(namelist) - 1:
+    podeSeguir = True
+    
+    while podeSeguir:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 return  # Encerra a função, mas mantém a janela aberta
 
-        screen.fill(BRANCO)
-
-        for i in range(num):
-            simqueue.insert(0, simqueue.pop())
-
-        eliminado = simqueue.pop()
-        eliminados.append(eliminado)
+        screen.fill(BRANCO)  
 
         raio -= 10  # Reduz o raio a cada eliminação
 
@@ -172,18 +174,20 @@ def hotPotato(num_players, num):
             text_rect = text.get_rect(center=(x, y))
             screen.blit(text, text_rect)
 
-        text = font.render(f"Eliminados : {eliminados}", True, (0, 0, 0))
-        screen.blit(text, (LARGURA // 2 - 500, ALTURA // 2 - 350))
-        text = font.render(f"Jogadores : {namelist}", True, (0, 255, 128))
-        screen.blit(text, (LARGURA // 2 - 500, ALTURA // 2 - 370))
         pygame.display.update()
-
         pygame.time.delay(2000)  # Tempo para mostrar quem foi eliminado
 
         clock.tick(2)  # Ajuste a taxa de atualização
-
-    vencedor = simqueue.pop()
-    print(f"Vencedor: {vencedor}")
+        
+        if len(simqueue) == 1:
+            podeSeguir = False
+            continue
+        
+        for i in range(num):
+            enqueue(simqueue, dequeue(simqueue))
+             
+        eliminado = dequeue(simqueue)
+        eliminados.append(eliminado)
 
     while True:  # Loop para manter a janela aberta
         for event in pygame.event.get():
