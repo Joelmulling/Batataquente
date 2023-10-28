@@ -174,12 +174,33 @@ def hotPotato(num_players, num):
             text_rect = text.get_rect(center=(x, y))
             screen.blit(text, text_rect)
 
+        if len(eliminados) > 0:
+            eliminado = eliminados[-1]
+            pygame.font.init()
+            myfont = pygame.font.SysFont('Comic Sans MS', 30)
+            textsurface = myfont.render(f'{eliminado} foi eliminado nesta rodada!', False, VERMELHO)
+            screen.blit(textsurface, (LARGURA // 2 - textsurface.get_width() // 2, ALTURA - textsurface.get_height() - 20))
+        
         pygame.display.update()
         pygame.time.delay(2000)  # Tempo para mostrar quem foi eliminado
 
         clock.tick(2)  # Ajuste a taxa de atualização
         
         if len(simqueue) == 1:
+            screen.fill(BRANCO)  
+            pygame.font.init()
+            jogador_posicoes = calculate_player_positions(len(namelist) - len(eliminados), raio, (centro_x, centro_y))
+
+            for i, (x, y) in enumerate(jogador_posicoes):
+                pygame.draw.circle(screen, (128, 128, 128), (int(x), int(y)), 50)
+                text = font.render(simqueue[i], True, (0, 0, 0))
+                text_rect = text.get_rect(center=(x, y))
+                screen.blit(text, text_rect)
+                
+            myfont = pygame.font.SysFont('Comic Sans MS', 30)
+            textsurface = myfont.render(f'{simqueue[0]} foi o vencedor do batata quente!', False, VERDE)
+            screen.blit(textsurface, (LARGURA // 2 - textsurface.get_width() // 2, ALTURA - textsurface.get_height() - 20))
+            pygame.display.update()
             podeSeguir = False
             continue
         
